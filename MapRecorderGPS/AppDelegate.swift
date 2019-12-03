@@ -11,6 +11,9 @@ import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    // user defaults
+    let defaults = UserDefaults.standard
 
 
 
@@ -31,8 +34,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+        
+        
+        
+        
+        
+        
+        
+        // Zamknięcie aplikacji przez użytkownika lub system
+
+        defaults.set(false, forKey: C.boolForStartStop) // ustawienie bool na wyłączony jeśli apka zostanie zamknięta
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
     // MARK: - Core Data stack
 
     lazy var persistentContainer: NSPersistentContainer = {
