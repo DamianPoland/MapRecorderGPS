@@ -88,17 +88,31 @@ extension ViewControllerRoads: UITableViewDelegate, UITableViewDataSource{
     return cell
     }
     
+    
+    
+    
+    
     //funkcja będzie wywołana gdy się kliknie na item w table View - NIE trzeba robić połączenia w storyboard
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     // przejście do kolejnego widoku
         // dane: identifier: ID nadane drugiemu activity w storyboard, po as? nazwa klasy połaczona do drugiego activity
         let vc = storyboard?.instantiateViewController(identifier: "IDSoryboardVewMap") as? ViewControllerMap
-        vc?.nameOfListWithRoadPoints = listOfRoads[indexPath.row].nameOfListWithRoadPoints! //dane które są przekazane do ViewControllerMap
+        //vc?.nameOfListWithRoadPoints = listOfRoads[indexPath.row].nameOfListWithRoadPoints! //dane które są przekazane do ViewControllerMap
+        
+        // przekazanie do następnego widoku DANY JEDEN element z listy
+        vc?.selectedCategory = listOfRoads[indexPath.row]
+        
+        
         navigationController?.pushViewController(vc!, animated: true)
     //zaznaczenia i inne funkcje
         // po kliknięciu w item odznacza się automatucznie
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    
+    
+    
+    
 
     // funkcja robi swipable czyli można przesunąć rząd żeby usunąć
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

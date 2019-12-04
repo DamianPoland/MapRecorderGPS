@@ -28,7 +28,6 @@ class ViewControllerMain: UIViewController {
     // dane wyjściowe z location Managera
     var locationCurrent: CLLocationCoordinate2D? // aktualna lokalizacja która nie będzie nil po pierwszej odpowiedzi z GPS
     var locationsList: [CLLocationCoordinate2D] = [] // lista punktów na mapie
-    var nameOfListWithRoadPoints: String = "" // nazwa listy (nie lista) z map points czli [RoadPoint]
     var totalLenghtInMeters: Int = 0 // obliczenie odległości w metrach
     var intervalTimeInSec: Int = 0 // obliczenie przedziału czasowego w sekundach
     var intervalTimeString = "00:00:00" // obliczenie przedziału czasowego w stringu do View
@@ -149,14 +148,33 @@ class ViewControllerMain: UIViewController {
         print("speedInKmPerH: \(speedInKmPerH)")
         
         //zapisanie danych w Core Data
-        SaveRoadInDoreData ()
+        SaveRoadInCoreData ()
     }
     
     //zapisanie danych w Core Data
-    func SaveRoadInDoreData () {
+    func SaveRoadInCoreData () {
         
-        // zmiana tablicy locationsList: [CLLocationCoordinate2D] na tablicę listOfRoadPoints: [RoadPoint] żeby zapisać do Core Data
-        nameOfListWithRoadPoints = String(Date().timeIntervalSince1970)
+        // zapisanie nowego elementu Road do Core Data
+        let newRoad = Road(context: self.context) //stworznie nowego obiektu NSManagedObject
+        newRoad.nameOfListWithRoadPoints = String(Date().timeIntervalSince1970) // niepowtażalna nazwa listy (nie lista) z map points czli [RoadPoint]
+        newRoad.totalLenghtInMeters = Int64(totalLenghtInMeters) // odpakowanie to Int(totalLenghtInMeters)
+        newRoad.intervalTimeInSec = Int64(intervalTimeInSec)
+        newRoad.intervalTimeString = intervalTimeString
+        newRoad.speedInKmPerH = speedInKmPerH
+        newRoad.dateTime = dateTime // to jest Date()
+        saveToCoreData() // zapisanie aktualnego stanu tablicy context do Core Data
+        
+        // pobranie aktualnej tablicy [Road] żeby przypisać do ostatniego jej elementu wszystkie z [RoadPoint]
+        let request : NSFetchRequest<Road> = Road.fetchRequest()
+        var listOfRoads: [Road] = []
+        do {
+            listOfRoads = try context.fetch(request)
+        }catch {
+            print("Error fetching data from context: \(error)")
+            return // jak będczie error to nie zapisze elementów na mapie jak niżej
+        }
+        
+        // zmiana tablicy locationsList: [CLLocationCoordinate2D] na tablicę listOfRoadPoints: [RoadPoint] żeby zapisać do Core Data wszystkie lementy
         var listOfRoadPoints: [RoadPoint] = []
         for item in locationsList {
             let lat = Double(item.latitude) // zmiana danej na double
@@ -164,19 +182,10 @@ class ViewControllerMain: UIViewController {
             let roadPoint = RoadPoint(context: self.context)
             roadPoint.lat = lat
             roadPoint.lon = lon
+            roadPoint.parentCategory = listOfRoads[listOfRoads.count-1] // parentCategory to nazwa poołączenia między bazami Entity
             listOfRoadPoints.append(roadPoint) // dodanie do tablicy
         }
         saveToCoreData() // zapisanie aktualnego stanu tablicy
-        
-        // zapidanie nowego elementu do Core DAta
-        let newRoad = Road(context: self.context) //stworznie nowego obiektu NSManagedObject
-        newRoad.nameOfListWithRoadPoints = nameOfListWithRoadPoints // nazwa listy (nie lista) z map points czli [RoadPoint]
-        newRoad.totalLenghtInMeters = Int64(totalLenghtInMeters) // odpakowanie to Int(totalLenghtInMeters)
-        newRoad.intervalTimeInSec = Int64(intervalTimeInSec)
-        newRoad.intervalTimeString = intervalTimeString
-        newRoad.speedInKmPerH = speedInKmPerH
-        newRoad.dateTime = dateTime // to jest Date()
-        saveToCoreData() // zapisanie aktualnego stanu tablicy context czyli itemArray do Core Data
     }
     
     // zapisanie zmian w CoreData
@@ -245,7 +254,7 @@ extension ViewControllerMain: CLLocationManagerDelegate, MKMapViewDelegate{
         }
     }
     
-    // funkcja do pbliczania dystansu
+    // funkcja do obliczania dystansu
     func getDistance(from: CLLocationCoordinate2D, to: CLLocationCoordinate2D) -> CLLocationDistance {
         // By Aviel Gross
         // https://stackoverflow.com/questions/11077425/finding-distance-between-cllocationcoordinate2d-points

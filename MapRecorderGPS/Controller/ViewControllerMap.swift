@@ -21,12 +21,16 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate {
     // zmienna przekazana z popredniego widoku
     var nameOfListWithRoadPoints:String = ""
     
+    // element listOfRoads przekazany z poprzedniego widoku po to żeby wyświetlić listę MapPaint która jest znim powiązana w Core Data
+    var selectedCategory: Road? 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //do Map
         viewMap.delegate = self // dodanie delegata żeby wyświeltlać polyline
         
+
         //pobiera listę MapPoint z danej tablicy
         loadItems()
 
@@ -35,6 +39,14 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate {
     //pobranie wszystkich elementów tablicy [RoadPoint] z Core Data i dodanie do tablicy var itemArray: [Item] = [] stworzonej wcześniej
     func loadItems () {
         let request : NSFetchRequest<RoadPoint> = RoadPoint.fetchRequest()
+        
+        // ustawienie filtra żeby wczytywał tylko punkty z [MapPoints] przypisane do niepowtarzalnej nazwy z obiektu [Road]
+        let predicate = NSPredicate(format: "parentCategory.nameOfListWithRoadPoints MATCHES %@", selectedCategory!.nameOfListWithRoadPoints!)
+        request.predicate = predicate
+        
+
+        
+        
         do {
             //pobranie listy z Core Data
             let listOfRoadPoints = try context.fetch(request)

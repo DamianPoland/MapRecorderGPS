@@ -34,22 +34,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
-        
-        
-        
-        
+    
         
         
         
         // Zamknięcie aplikacji przez użytkownika lub system
-
-        defaults.set(false, forKey: C.boolForStartStop) // ustawienie bool na wyłączony jeśli apka zostanie zamknięta
+        // wyłączenie nagrywawnia i zapisanie danych
+        if defaults.bool(forKey: C.boolForStartStop){ // Włączony
+//            let viewControllerMain = ViewControllerMain()
+//            viewControllerMain.stopRecordning()
+            
+            // ustawienie bool na wyłączony
+            defaults.set(false, forKey: C.boolForStartStop)
+            print("app closed in background with Play")
+        }
     }
 
-    
-    
-    
-    
     
     
     
