@@ -9,5 +9,6 @@
 import Foundation
 
 class C {
-    static let boolForStartStop = "bool for start stop"
+    static let boolForStartStop = "bool for start stop" // ustawienie bool jak się przyciśnie start na true lub stop na false
+    static let heightOfCameraOnMap = 0.002 // ustawienie wysokości kamery
 }

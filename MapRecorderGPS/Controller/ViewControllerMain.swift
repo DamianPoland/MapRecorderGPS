@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import CoreLocation
+import CoreData
 
 class ViewControllerMain: UIViewController {
 
@@ -25,14 +26,18 @@ class ViewControllerMain: UIViewController {
      let locationManager = CLLocationManager()
     
     // dane wyjściowe z location Managera
+    var locationCurrent: CLLocationCoordinate2D? // aktualna lokalizacja która nie będzie nil po pierwszej odpowiedzi z GPS
     var locationsList: [CLLocationCoordinate2D] = [] // lista punktów na mapie
-    var locationCurrent: CLLocationCoordinate2D? // ktualna lokalizacja która nie będzie nil po pierwszej odpowiedzi z GPS
+    var nameOfListWithRoadPoints: String = "" // nazwa listy (nie lista) z map points czli [RoadPoint]
     var totalLenghtInMeters: Int = 0 // obliczenie odległości w metrach
     var intervalTimeInSec: Int = 0 // obliczenie przedziału czasowego w sekundach
     var intervalTimeString = "00:00:00" // obliczenie przedziału czasowego w stringu do View
     var speedInKmPerH: Double = 0.0 //obliczenie średniej prędkości w km/h
+    var dateTime = Date() // aktualna data - zmienia na aktualniejszą przy każdym zapisie trasy
 
-    
+    // context służy do zapisu, odczytu i innych z Core Data. Odnosi się do contenera DataModel z AppDelegate
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+
     // czas włączenia
     var startTime: TimeInterval?
     
@@ -59,70 +64,23 @@ class ViewControllerMain: UIViewController {
         } else {
             buttonStartStopOutlet.setBackgroundImage(UIImage(imageLiteralResourceName: "stop_button_transparent"), for: .normal) // ustawienie ikonki na stop
         }
-    
     }
-
-
-    // buttons
     
-    // button Start Stop
+    // button Start/Stop
     @IBAction func buttonPlayStop(_ sender: UIButton) {
         
         // włączenie
         if defaults.bool(forKey: C.boolForStartStop) == false { // WYłączony
-            
-            // ustawienie bool na włączony
-            defaults.set(true, forKey: C.boolForStartStop)
-            
-            // ustawienie ikonki na stop
-            buttonStartStopOutlet.setBackgroundImage(UIImage(imageLiteralResourceName: "stop_button_transparent"), for: .normal)
-            
-            // wyczyszczenie listy do zera
-            if locationsList.count != 0 {
-                locationsList.removeAll()
-            }
-            
-            // wyczyszczenie odległości
-            totalLenghtInMeters = 0
-            
-            // dodanie ostatniej pozycji z menagera jeśli juz się włączył
-            if let locationCurrentUnwrapped = locationCurrent {
-                locationsList.append(locationCurrentUnwrapped)
-            }
-            
-            // zapisanie aktualnego czasu
-            startTime = Date().timeIntervalSince1970
-            print(startTime!)
-            
+
+            // funkcja do włączenia nagrywania
+            startRecording()
             
         // wyłączenie
         }else { // Włączony
             
-            // ustawienie bool na wyłączony
-            defaults.set(false, forKey: C.boolForStartStop)
-            
-            // ustawienie ikonki na play
-            buttonStartStopOutlet.setBackgroundImage(UIImage(imageLiteralResourceName: "start_button_transparent"), for: .normal)
-            
-            // pobranie czasu wyłączenia i obliczenie przedziału czasowego
-            let stopTime = Date().timeIntervalSince1970
-            intervalTimeInSec = Int(stopTime - startTime!)
-            print("intervalTimeInSec: \(intervalTimeInSec)")
-            // przeliczenie na format 00:00:00
-            let hours = (intervalTimeInSec) / 3600
-            let minutes = (intervalTimeInSec / 60) - Int(hours * 60)
-            let seconds = (intervalTimeInSec) - (Int(intervalTimeInSec / 60) * 60)
-            intervalTimeString = String(NSString(format: "%0.2d:%0.2d:%0.2d",hours,minutes,seconds))
-            
-            // obliczeni prędkości
-            let speedInMeterPerSec: Double = Double(totalLenghtInMeters) / Double(intervalTimeInSec)
-            print("speedInMeterPerSec: \(speedInMeterPerSec)")
-            speedInKmPerH = (round((speedInMeterPerSec * 3.6)*10)) / 10 // wynik w km/h zaokrąglony do 0.0
-            print("speedInKmPerH: \(speedInKmPerH)")
-
-            
+            // funkcja do wYłączenia nagrywania
+            stopRecordning ()
         }
-        
     }
     
     // button Roads - do następnego activity
@@ -132,12 +90,113 @@ class ViewControllerMain: UIViewController {
         performSegue(withIdentifier: "IDSegueRoads", sender: self)
     }
     
+    // funkcja do włączenia nagrywania
+    func startRecording () {
+                    
+        // ustawienie bool na włączony
+        defaults.set(true, forKey: C.boolForStartStop)
+        
+        // ustawienie ikonki na stop
+        buttonStartStopOutlet.setBackgroundImage(UIImage(imageLiteralResourceName: "stop_button_transparent"), for: .normal)
+        
+        // wyczyszczenie listy do zera
+        if locationsList.count != 0 {
+            locationsList.removeAll()
+        }
+        
+        // wyczyszczenie odległości
+        totalLenghtInMeters = 0
+        
+        // dodanie ostatniej pozycji z menagera jeśli juz się włączył
+        if let locationCurrentUnwrapped = locationCurrent {
+            locationsList.append(locationCurrentUnwrapped)
+        }
+        
+        // zapisanie aktualnego czasu
+        startTime = Date().timeIntervalSince1970
+        print(startTime!)
+    }
     
+    // funkcja do wYłączenia nagrywania
+    func stopRecordning () {
+                    
+        // ustawienie bool na wyłączony
+        defaults.set(false, forKey: C.boolForStartStop)
+        
+        // ustawienie ikonki na play
+        buttonStartStopOutlet.setBackgroundImage(UIImage(imageLiteralResourceName: "start_button_transparent"), for: .normal)
+        
+        // pobranie czasu wyłączenia i obliczenie przedziału czasowego
+        dateTime = Date()
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.timeStyle = DateFormatter.Style.none
+//        dateFormatter.dateStyle = DateFormatter.Style.short
+//        let date = dateFormatter.string(from: dateTime) // 12/15/16
+//        print("date: \(date)")
+        let stopTime = Date().timeIntervalSince1970
+        intervalTimeInSec = Int(stopTime - startTime!)
+        print("intervalTimeInSec: \(intervalTimeInSec)")
+        // przeliczenie na format 00:00:00
+        let hours = (intervalTimeInSec) / 3600
+        let minutes = (intervalTimeInSec / 60) - Int(hours * 60)
+        let seconds = (intervalTimeInSec) - (Int(intervalTimeInSec / 60) * 60)
+        intervalTimeString = String(NSString(format: "%0.2d:%0.2d:%0.2d",hours,minutes,seconds))
+        
+        // obliczeni prędkości
+        let speedInMeterPerSec: Double = Double(totalLenghtInMeters) / Double(intervalTimeInSec)
+        print("speedInMeterPerSec: \(speedInMeterPerSec)")
+        speedInKmPerH = (round((speedInMeterPerSec * 3.6)*10)) / 10 // wynik w km/h zaokrąglony do 0.0
+        print("speedInKmPerH: \(speedInKmPerH)")
+        
+        //zapisanie danych w Core Data
+        SaveRoadInDoreData ()
+    }
+    
+    //zapisanie danych w Core Data
+    func SaveRoadInDoreData () {
+        
+        // zmiana tablicy locationsList: [CLLocationCoordinate2D] na tablicę listOfRoadPoints: [RoadPoint] żeby zapisać do Core Data
+        nameOfListWithRoadPoints = String(Date().timeIntervalSince1970)
+        var listOfRoadPoints: [RoadPoint] = []
+        for item in locationsList {
+            let lat = Double(item.latitude) // zmiana danej na double
+            let lon = Double(item.longitude) // zmiana danej na double
+            let roadPoint = RoadPoint(context: self.context)
+            roadPoint.lat = lat
+            roadPoint.lon = lon
+            listOfRoadPoints.append(roadPoint) // dodanie do tablicy
+        }
+        saveToCoreData() // zapisanie aktualnego stanu tablicy
+        
+        // zapidanie nowego elementu do Core DAta
+        let newRoad = Road(context: self.context) //stworznie nowego obiektu NSManagedObject
+        newRoad.nameOfListWithRoadPoints = nameOfListWithRoadPoints // nazwa listy (nie lista) z map points czli [RoadPoint]
+        newRoad.totalLenghtInMeters = Int64(totalLenghtInMeters) // odpakowanie to Int(totalLenghtInMeters)
+        newRoad.intervalTimeInSec = Int64(intervalTimeInSec)
+        newRoad.intervalTimeString = intervalTimeString
+        newRoad.speedInKmPerH = speedInKmPerH
+        newRoad.dateTime = dateTime // to jest Date()
+        saveToCoreData() // zapisanie aktualnego stanu tablicy context czyli itemArray do Core Data
+    }
+    
+    // zapisanie zmian w CoreData
+    func saveToCoreData() {
+        do {
+            try context.save()
+        }catch{
+            print("Error Saving Context: \(error)")
+        }
+    }
 
+    
 }
+
+
+
 
 // MARK: - localization funcjons
 extension ViewControllerMain: CLLocationManagerDelegate, MKMapViewDelegate{
+    
     // funkcja wywoływana przez delegata bedzie automatycznie się updatowała przy zmianie lokalizacji.
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
        
@@ -152,7 +211,7 @@ extension ViewControllerMain: CLLocationManagerDelegate, MKMapViewDelegate{
             locationCurrent = setLocationCurrent
             
             // ustawienie kamery na zapisany region
-            let span = MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002) // ustawienie wysokości kamery
+            let span = MKCoordinateSpan(latitudeDelta: C.heightOfCameraOnMap, longitudeDelta: C.heightOfCameraOnMap) // ustawienie wysokości kamery
             let region = MKCoordinateRegion(center: setLocationCurrent, span: span)
             mapView.setRegion(region, animated: true)
             

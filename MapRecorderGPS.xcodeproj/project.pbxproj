@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7922B6002397AD2F0036D263 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7922B5FF2397AD2F0036D263 /* TableViewCell.swift */; };
+		7922B6022397BAC60036D263 /* ViewControllerMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7922B6012397BAC60036D263 /* ViewControllerMap.swift */; };
 		7931246D2396A1FB0013DDD4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7931246C2396A1FB0013DDD4 /* AppDelegate.swift */; };
 		7931246F2396A1FB0013DDD4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7931246E2396A1FB0013DDD4 /* SceneDelegate.swift */; };
 		793124712396A1FB0013DDD4 /* ViewControllerMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 793124702396A1FB0013DDD4 /* ViewControllerMain.swift */; };
@@ -19,6 +21,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7922B5FF2397AD2F0036D263 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		7922B6012397BAC60036D263 /* ViewControllerMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerMap.swift; sourceTree = "<group>"; };
 		793124692396A1FB0013DDD4 /* MapRecorderGPS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapRecorderGPS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7931246C2396A1FB0013DDD4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7931246E2396A1FB0013DDD4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -70,7 +74,6 @@
 				793124782396A1FC0013DDD4 /* Assets.xcassets */,
 				7931247A2396A1FC0013DDD4 /* LaunchScreen.storyboard */,
 				7931247D2396A1FC0013DDD4 /* Info.plist */,
-				793124752396A1FB0013DDD4 /* MapRecorderGPS.xcdatamodeld */,
 			);
 			path = MapRecorderGPS;
 			sourceTree = "<group>";
@@ -79,6 +82,8 @@
 			isa = PBXGroup;
 			children = (
 				793124882396CC070013DDD4 /* C.swift */,
+				793124752396A1FB0013DDD4 /* MapRecorderGPS.xcdatamodeld */,
+				7922B5FF2397AD2F0036D263 /* TableViewCell.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -96,6 +101,7 @@
 			children = (
 				793124702396A1FB0013DDD4 /* ViewControllerMain.swift */,
 				793124862396A4310013DDD4 /* ViewControllerRoads.swift */,
+				7922B6012397BAC60036D263 /* ViewControllerMap.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -179,7 +185,9 @@
 				793124772396A1FB0013DDD4 /* MapRecorderGPS.xcdatamodeld in Sources */,
 				793124892396CC070013DDD4 /* C.swift in Sources */,
 				7931246D2396A1FB0013DDD4 /* AppDelegate.swift in Sources */,
+				7922B6002397AD2F0036D263 /* TableViewCell.swift in Sources */,
 				7931246F2396A1FB0013DDD4 /* SceneDelegate.swift in Sources */,
+				7922B6022397BAC60036D263 /* ViewControllerMap.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
