@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "start_button_transparent.png",
+      "filename" : "WolfMobileIconBlueZOpisem.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "start_button_transparent-1.png",
+      "filename" : "WolfMobileIconBlueZOpisem-1.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "start_button_transparent-2.png",
+      "filename" : "WolfMobileIconBlueZOpisem-2.png",
       "scale" : "3x"
     }
   ],

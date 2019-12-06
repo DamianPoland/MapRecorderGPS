@@ -18,6 +18,7 @@
 		7931247C2396A1FC0013DDD4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7931247A2396A1FC0013DDD4 /* LaunchScreen.storyboard */; };
 		793124872396A4310013DDD4 /* ViewControllerRoads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 793124862396A4310013DDD4 /* ViewControllerRoads.swift */; };
 		793124892396CC070013DDD4 /* C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 793124882396CC070013DDD4 /* C.swift */; };
+		79C1A11023995D6000F66987 /* ViewControllerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C1A10F23995D6000F66987 /* ViewControllerSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		7931247D2396A1FC0013DDD4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		793124862396A4310013DDD4 /* ViewControllerRoads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerRoads.swift; sourceTree = "<group>"; };
 		793124882396CC070013DDD4 /* C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C.swift; sourceTree = "<group>"; };
+		79C1A10F23995D6000F66987 /* ViewControllerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 				793124702396A1FB0013DDD4 /* ViewControllerMain.swift */,
 				793124862396A4310013DDD4 /* ViewControllerRoads.swift */,
 				7922B6012397BAC60036D263 /* ViewControllerMap.swift */,
+				79C1A10F23995D6000F66987 /* ViewControllerSettings.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -181,6 +184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				793124872396A4310013DDD4 /* ViewControllerRoads.swift in Sources */,
+				79C1A11023995D6000F66987 /* ViewControllerSettings.swift in Sources */,
 				793124712396A1FB0013DDD4 /* ViewControllerMain.swift in Sources */,
 				793124772396A1FB0013DDD4 /* MapRecorderGPS.xcdatamodeld in Sources */,
 				793124892396CC070013DDD4 /* C.swift in Sources */,

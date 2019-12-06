@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "yourRoads_transparent.png",
+      "filename" : "map_button_transparent.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "map_button_transparent-1.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "map_button_transparent-2.png",
       "scale" : "3x"
     }
   ],

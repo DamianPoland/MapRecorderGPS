@@ -20,6 +20,11 @@ class ViewControllerRoads: UIViewController {
     
     // stworzenie listy Roads
     var listOfRoads: [Road] = []
+    
+    // user defaults
+    let defaults = UserDefaults.standard
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +37,8 @@ class ViewControllerRoads: UIViewController {
     func loadFromCoreData () {
         let request : NSFetchRequest<Road> = Road.fetchRequest()
         do {
-            listOfRoads = try context.fetch(request)
+            let listOfRoadsNotSorted = try context.fetch(request)
+            listOfRoads = listOfRoadsNotSorted .sorted(by: { $0.dateTime! > $1.dateTime! }) // posortowanie tableki wg daty
         }catch {
             print("Error fetching data from context: \(error)")
         }
@@ -51,6 +57,7 @@ class ViewControllerRoads: UIViewController {
 //MARK: - do table View
 // dodać Extension do ViewControler czyli  zrobić w tym samym oknie co jest tableView ale poza klasą ViewControler
 extension ViewControllerRoads: UITableViewDelegate, UITableViewDataSource{
+    
     // funkcja do zapisania ile będzie rzędów w tableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listOfRoads.count // tyle rzędów ile w tabeli elementów
@@ -75,22 +82,28 @@ extension ViewControllerRoads: UITableViewDelegate, UITableViewDataSource{
         
         //ustawienie czasu drogi
         let time = String(listOfRoads[indexPath.row].intervalTimeString!)
-        cell.viewTime.text = "\(time) s"
+        cell.viewTime.text = time
         
         // ustawienie dystansu
-        let dist = String(listOfRoads[indexPath.row].totalLenghtInMeters)
-        cell.viewDist.text = "\(dist) m"
+        let dist = listOfRoads[indexPath.row].totalLenghtInMeters
+        if defaults.bool(forKey: C.keyToSwitchUnitsOnOff) { // jeśli amerykański jednostki są ustawione
+            let metersToMiles = (round(Double(dist) * 0.0006213712*1000))/1000 // przeliczenie na mile jeśli są ustawione jednostki US
+            cell.viewDist.text = "\(metersToMiles) miles"
+        } else {
+            cell.viewDist.text = "\(dist) m"
+        }
         
         // ustawienie speed
-        let speed = String(listOfRoads[indexPath.row].speedInKmPerH)
-        cell.viewSpeed.text = "\(speed) km/h"
-    
+        let speed = listOfRoads[indexPath.row].speedInKmPerH
+        if defaults.bool(forKey: C.keyToSwitchUnitsOnOff) { // jeśli amerykański jednostki są ustawione
+            let metersToMiles = (round(speed * 0.62*100))/100  // przeliczenie na mile jeśli są ustawione jednostki US
+            cell.viewSpeed.text = "\(metersToMiles) miles/h"
+        } else {
+            cell.viewSpeed.text = "\(speed) km/h"
+        }
+        cell.accessoryType = .disclosureIndicator // strzałka z prawej każdej Cell
     return cell
     }
-    
-    
-    
-    
     
     //funkcja będzie wywołana gdy się kliknie na item w table View - NIE trzeba robić połączenia w storyboard
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -101,18 +114,11 @@ extension ViewControllerRoads: UITableViewDelegate, UITableViewDataSource{
         
         // przekazanie do następnego widoku DANY JEDEN element z listy
         vc?.selectedCategory = listOfRoads[indexPath.row]
-        
-        
         navigationController?.pushViewController(vc!, animated: true)
-    //zaznaczenia i inne funkcje
+        
         // po kliknięciu w item odznacza się automatucznie
         tableView.deselectRow(at: indexPath, animated: true)
     }
-    
-    
-    
-    
-    
 
     // funkcja robi swipable czyli można przesunąć rząd żeby usunąć
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

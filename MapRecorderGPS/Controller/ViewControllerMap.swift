@@ -44,22 +44,20 @@ class ViewControllerMap: UIViewController, MKMapViewDelegate {
         let predicate = NSPredicate(format: "parentCategory.nameOfListWithRoadPoints MATCHES %@", selectedCategory!.nameOfListWithRoadPoints!)
         request.predicate = predicate
         
-
-        
-        
         do {
             //pobranie listy z Core Data
             let listOfRoadPoints = try context.fetch(request)
+            let listOfRoadPointsSorted = listOfRoadPoints.sorted(by: { $0.order > $1.order }) // posortowana tabelka bo Core Data zapisuje nie po kolei gdzie order to wartość z podrzędnej klasy zapisana po kolei w Int - czyli 1 2 3 ....
             
             // zabezpieczenie przed pustą listą
-            if listOfRoadPoints.count < 1 {
+            if listOfRoadPointsSorted.count < 1 {
                 print("list of points in Core Data is empty")
                 return
             }
             
             // przekształcenie listy punktów [RoadPoint] na CLLocationCoordinate2D
             var locationsList: [CLLocationCoordinate2D] = []
-            for item in listOfRoadPoints {
+            for item in listOfRoadPointsSorted {
                 
                 let lat = item.lat
                 let lon = item.lon

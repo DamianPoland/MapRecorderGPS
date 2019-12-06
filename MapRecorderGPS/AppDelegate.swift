@@ -18,7 +18,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        // zainicjowanie wartości w defaults dla switchFocus na true gdy jeszcze nie był używany - domyślnie jest false
+        UserDefaults.standard.register(defaults: [
+            C.keyToSwitchFocusOnOff: true,
+            ])
+        
         return true
     }
 
@@ -42,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // wyłączenie nagrywawnia i zapisanie danych
         if defaults.bool(forKey: C.boolForStartStop){ // Włączony
 //            let viewControllerMain = ViewControllerMain()
-//            viewControllerMain.stopRecordning()
+//            viewControllerMain.saveToCoreData()
             
             // ustawienie bool na wyłączony
             defaults.set(false, forKey: C.boolForStartStop)
