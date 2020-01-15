@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import GoogleMobileAds
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -23,6 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaults.standard.register(defaults: [
             C.keyToSwitchFocusOnOff: true,
             ])
+        
+        GADMobileAds.sharedInstance().start(completionHandler: nil) // do reklam
         
         return true
     }

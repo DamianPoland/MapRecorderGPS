@@ -10,8 +10,9 @@ import UIKit
 import MapKit
 import CoreLocation
 import CoreData
+import GoogleMobileAds
 
-class ViewControllerMain: UIViewController {
+class ViewControllerMain: UIViewController, GADBannerViewDelegate {
 
     
     //views outlets:
@@ -54,6 +55,9 @@ class ViewControllerMain: UIViewController {
     // do usuwania starych polylines z mapy - tu się zapisują wszystkie polylines co są na mapie
     var oldPolyLines: [MKPolyline] = []
 
+    // do reklam bannera
+    var bannerView: GADBannerView!
+    
 
     
     override func viewDidLoad() {
@@ -62,7 +66,7 @@ class ViewControllerMain: UIViewController {
         // do location
         locationManager.requestAlwaysAuthorization() // pozwolenie na to żeby dziłało location - działa też z background
         locationManager.delegate = self // dodanie delegata
-        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation //najwyrzsza dokładność lokalizacji
+        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters//najwyrzsza dokładność lokalizacji
         locationManager.allowsBackgroundLocationUpdates = true //jdziała w background
         locationManager.startUpdatingLocation() // startuje i pobiera cały czas lokalizację delegat musi być dodany przed tym
         
@@ -88,6 +92,20 @@ class ViewControllerMain: UIViewController {
         } else {
             viewSwitchFocus.setOn(false, animated: true)
         }
+        
+        // do reklam banner
+        bannerView = GADBannerView(adSize: kGADAdSizeBanner) // utworzeni bannera
+        //addBannerViewToView(bannerView) // wywołanie funkcji z utworzeniem bannera w danym view - zrobione w funkcji adViewDidReceiveAd
+        bannerView.adUnitID = "ca-app-pub-1490567689734833/7184364377" // to jest przykłądowy i zmienić na bannerID
+        bannerView.rootViewController = self
+        bannerView.load(GADRequest()) // wczytanie reklamy
+        bannerView.delegate = self // dodanie delegata z dziedziczenia GADBannerViewDelegate żeby wywołać funkcję np adViewDidReceiveAd
+
+    }
+    
+    // funkcja pochodzi z protokołu GADBannerViewDelegate
+    func adViewDidReceiveAd(_ bannerView: GADBannerView) {
+      addBannerViewToView(bannerView) // wywołanie funkcji z utworzeniem bannera w danym view
     }
     
     // jeśli zmieni się jednośtki w ustawieniach na US lub EU i wróci do ViewControllerMain. i będzie na zero wszystko to przeładuje widoki żeby zmienic jednostki
@@ -178,7 +196,7 @@ class ViewControllerMain: UIViewController {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (Timer) in // ustawienie na sekundowe włączanie i updatowanie view co sekunde
             self.counter += 1
             self.viewTime.text = self.changeTimeInSecOnHourMinuteSec(timeInSec: self.counter) // przeliczenie sekund na format 00:00:00 s
-            print(self.changeTimeInSecOnHourMinuteSec(timeInSec: self.counter))
+            //print(self.changeTimeInSecOnHourMinuteSec(timeInSec: self.counter))
         })
             
     }
@@ -205,7 +223,7 @@ class ViewControllerMain: UIViewController {
         doViewsAsDefaults()
         
         // toast do poinformowania że droga zostałą zapisana
-        showToast(controller: self, message: "Road saved in My Roads", seconds: 2)
+        showToast(controller: self, message: "Road saved in My Roads", seconds: 1.5)
         
 
     }
@@ -241,20 +259,23 @@ class ViewControllerMain: UIViewController {
         }
         
         // zmiana tablicy locationsList: [CLLocationCoordinate2D] na tablicę listOfRoadPoints: [RoadPoint] żeby zapisać do Core Data wszystkie lementy
-        var listOfRoadPoints: [RoadPoint] = []
-        var order = 1
-        for item in locationsList {
-            let lat = Double(item.latitude) // zmiana danej na double
-            let lon = Double(item.longitude) // zmiana danej na double
-            let roadPoint = RoadPoint(context: self.context)
-            roadPoint.lat = lat
-            roadPoint.lon = lon
-            roadPoint.order = Int64(order) // przypisanie wartości żeby potem mozna było elementy ustawić po kolei bo Core Data nie zapisuje po kolei
-            order += 1 // podniesienie o jeden kolejności
-            roadPoint.parentCategory = listOfRoads[listOfRoads.count-1] // parentCategory to nazwa poołączenia między bazami Entity
-            listOfRoadPoints.append(roadPoint) // dodanie do tablicy
+        DispatchQueue.global(qos: .background).async {
+            var listOfRoadPoints: [RoadPoint] = []
+            var order = 1
+            for item in self.locationsList {
+                let lat = Double(item.latitude) // zmiana danej na double
+                let lon = Double(item.longitude) // zmiana danej na double
+                let roadPoint = RoadPoint(context: self.context)
+                roadPoint.lat = lat
+                roadPoint.lon = lon
+                roadPoint.order = Int64(order) // przypisanie wartości żeby potem mozna było elementy ustawić po kolei bo Core Data nie zapisuje po kolei
+                order += 1 // podniesienie o jeden kolejności
+                roadPoint.parentCategory = listOfRoads[listOfRoads.count-1] // parentCategory to nazwa poołączenia między bazami Entity
+                listOfRoadPoints.append(roadPoint) // dodanie do tablicy
+            }
+            self.saveToCoreData() // zapisanie aktualnego stanu tablicy [RoadPoint]
         }
-        saveToCoreData() // zapisanie aktualnego stanu tablicy [RoadPoint]
+
     
     }
     
@@ -294,11 +315,12 @@ class ViewControllerMain: UIViewController {
     
     // przeliczenie sekund na format 00:00:00 s
     func changeTimeInSecOnHourMinuteSec(timeInSec: Int) -> String {
-        let hours = (timeInSec) / 3600
-        let minutes = (timeInSec / 60) - Int(hours * 60)
-        let seconds = (timeInSec) - (Int(intervalTimeInSec / 60) * 60)
-        let timeString = String(NSString(format: "%0.2d:%0.2d:%0.2d",hours,minutes,seconds))
-        return timeString + " s"
+        
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute, .second]
+        formatter.unitsStyle = .positional
+        let formattedString = formatter.string(from: TimeInterval(timeInSec))!
+        return formattedString + " s"
     }
 
     // toast do poinformowania że droga zostałą zapisana
@@ -311,6 +333,28 @@ class ViewControllerMain: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + seconds) {
             alert.dismiss(animated: true)        }
     }
+    
+    // funkcja do stworzenia View z bannerem czyli GADBannerView
+    func addBannerViewToView(_ bannerView: GADBannerView) {
+      bannerView.translatesAutoresizingMaskIntoConstraints = false
+      view.addSubview(bannerView)
+      view.addConstraints(
+        [NSLayoutConstraint(item: bannerView,
+                            attribute: .bottom,
+                            relatedBy: .equal,
+                            toItem: bottomLayoutGuide, //nie zmieniać tego!
+                            attribute: .top,
+                            multiplier: 1,
+                            constant: 0),
+         NSLayoutConstraint(item: bannerView,
+                            attribute: .centerX,
+                            relatedBy: .equal,
+                            toItem: view,
+                            attribute: .centerX,
+                            multiplier: 1,
+                            constant: 0)
+        ])
+     }
 }
 
 

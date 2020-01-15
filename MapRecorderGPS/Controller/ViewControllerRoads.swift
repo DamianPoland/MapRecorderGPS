@@ -72,7 +72,8 @@ extension ViewControllerRoads: UITableViewDelegate, UITableViewDataSource{
         // ustawienie dnia
         let dateFromCoreData = listOfRoads[indexPath.row].dateTime!
         let formatter = DateFormatter()
-        let day = formatter.weekdaySymbols[Calendar.current.component(.weekday, from: Date())]
+        formatter.dateFormat = "EEEE"
+        let day = formatter.string(from: dateFromCoreData)
         cell.viewDay.text = day
         
         //ustawienie daty

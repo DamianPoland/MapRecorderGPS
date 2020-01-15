@@ -1,0 +1,6 @@
+framework module Pods_MapRecorderGPS {
+  umbrella header "Pods-MapRecorderGPS-umbrella.h"
+
+  export *
+  module * { export * }
+}
