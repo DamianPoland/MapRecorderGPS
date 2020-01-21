@@ -370,10 +370,44 @@
                                     </segmentedControl>
                                 </subviews>
                             </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="B50-pK-PcB">
+                                <rect key="frame" x="8" y="115" width="318" height="30"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SMe-2Q-MWJ">
+                                        <rect key="frame" x="0.0" y="0.0" width="102" height="30"/>
+                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title=" Remove Adds ">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="titleShadowColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="buttonRemoveAdds:" destination="hQG-fg-hVU" eventType="touchUpInside" id="JTR-hY-o04"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ywy-Ht-sn5">
+                                        <rect key="frame" x="118" y="0.0" width="16" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vzf-77-T9D">
+                                        <rect key="frame" x="150" y="0.0" width="168" height="30"/>
+                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title=" Restore Removed Adds ">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="buttonRestore:" destination="hQG-fg-hVU" eventType="touchUpInside" id="hsA-gG-83p"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="gph-ez-JHq" firstAttribute="top" secondItem="qwN-UU-WDy" secondAttribute="top" constant="16" id="NUx-rE-ocH"/>
+                            <constraint firstItem="B50-pK-PcB" firstAttribute="top" secondItem="gph-ez-JHq" secondAttribute="bottom" constant="24" id="XLT-vi-b42"/>
+                            <constraint firstItem="B50-pK-PcB" firstAttribute="leading" secondItem="qwN-UU-WDy" secondAttribute="leading" constant="8" id="Xfl-kI-KgT"/>
                             <constraint firstItem="gph-ez-JHq" firstAttribute="leading" secondItem="qwN-UU-WDy" secondAttribute="leading" constant="16" id="hKi-41-zf6"/>
                             <constraint firstItem="qwN-UU-WDy" firstAttribute="trailing" secondItem="gph-ez-JHq" secondAttribute="trailing" constant="16" id="vdZ-GB-d0C"/>
                         </constraints>
@@ -383,6 +417,7 @@
                         <barButtonItem key="backBarButtonItem" title="back" id="z0h-NS-g50"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="viewStackWithButtonsRemoveAndRestore" destination="B50-pK-PcB" id="zsU-k6-v6M"/>
                         <outlet property="viewUnits" destination="M0M-7o-wx3" id="VEf-fK-eDg"/>
                     </connections>
                 </viewController>

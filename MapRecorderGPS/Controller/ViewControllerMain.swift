@@ -103,9 +103,15 @@ class ViewControllerMain: UIViewController, GADBannerViewDelegate {
 
     }
     
-    // funkcja pochodzi z protokołu GADBannerViewDelegate
+    // funkcja pochodzi z protokołu GADBannerViewDelegate i odpali się gdy reklama się załąduje
     func adViewDidReceiveAd(_ bannerView: GADBannerView) {
-      addBannerViewToView(bannerView) // wywołanie funkcji z utworzeniem bannera w danym view
+        
+        if defaults.bool(forKey: C.keyToTurnOffAdds) {
+            // reklamy wyłączone więc nie pokaze reklamy
+        } else {
+            // wywołanie funkcji z utworzeniem bannera w danym view
+            addBannerViewToView(bannerView)
+        }
     }
     
     // jeśli zmieni się jednośtki w ustawieniach na US lub EU i wróci do ViewControllerMain. i będzie na zero wszystko to przeładuje widoki żeby zmienic jednostki

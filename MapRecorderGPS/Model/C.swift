@@ -24,4 +24,5 @@ class C {
     
     static let keyToSwitchFocusOnOff = "Key to Switch focus OnOff"
 
+    static let keyToTurnOffAdds = "Key to turn off adds"
 }

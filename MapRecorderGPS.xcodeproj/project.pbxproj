@@ -10,6 +10,7 @@
 		5C295FC068E48060D55CC161 /* Pods_MapRecorderGPS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BE44440BB536BDA55967A48 /* Pods_MapRecorderGPS.framework */; };
 		7922B6002397AD2F0036D263 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7922B5FF2397AD2F0036D263 /* TableViewCell.swift */; };
 		7922B6022397BAC60036D263 /* ViewControllerMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7922B6012397BAC60036D263 /* ViewControllerMap.swift */; };
+		79265B8F23D70C2D005B01D5 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79265B8E23D70C2D005B01D5 /* StoreKit.framework */; };
 		7931246D2396A1FB0013DDD4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7931246C2396A1FB0013DDD4 /* AppDelegate.swift */; };
 		7931246F2396A1FB0013DDD4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7931246E2396A1FB0013DDD4 /* SceneDelegate.swift */; };
 		793124712396A1FB0013DDD4 /* ViewControllerMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 793124702396A1FB0013DDD4 /* ViewControllerMain.swift */; };
@@ -27,6 +28,8 @@
 		6D9FB54C31398E8876EADE84 /* Pods-MapRecorderGPS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapRecorderGPS.debug.xcconfig"; path = "Target Support Files/Pods-MapRecorderGPS/Pods-MapRecorderGPS.debug.xcconfig"; sourceTree = "<group>"; };
 		7922B5FF2397AD2F0036D263 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		7922B6012397BAC60036D263 /* ViewControllerMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerMap.swift; sourceTree = "<group>"; };
+		79265B8B23D6F6F0005B01D5 /* MapRecorderGPS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MapRecorderGPS.entitlements; sourceTree = "<group>"; };
+		79265B8E23D70C2D005B01D5 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		793124692396A1FB0013DDD4 /* MapRecorderGPS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapRecorderGPS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7931246C2396A1FB0013DDD4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7931246E2396A1FB0013DDD4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -48,6 +51,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5C295FC068E48060D55CC161 /* Pods_MapRecorderGPS.framework in Frameworks */,
+				79265B8F23D70C2D005B01D5 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,6 +61,7 @@
 		30A930FD78316AC3A7FFF9AB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				79265B8E23D70C2D005B01D5 /* StoreKit.framework */,
 				9BE44440BB536BDA55967A48 /* Pods_MapRecorderGPS.framework */,
 			);
 			name = Frameworks;
@@ -83,6 +88,7 @@
 		7931246B2396A1FB0013DDD4 /* MapRecorderGPS */ = {
 			isa = PBXGroup;
 			children = (
+				79265B8B23D6F6F0005B01D5 /* MapRecorderGPS.entitlements */,
 				793124852396A2450013DDD4 /* Controller */,
 				793124842396A23E0013DDD4 /* View */,
 				793124832396A2350013DDD4 /* Model */,
@@ -404,8 +410,9 @@
 			baseConfigurationReference = 6D9FB54C31398E8876EADE84 /* Pods-MapRecorderGPS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MapRecorderGPS/MapRecorderGPS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = RHJ3A2L6K5;
 				INFOPLIST_FILE = MapRecorderGPS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -413,7 +420,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3;
+				MARKETING_VERSION = 2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.wolfmobileapps.MapRecorderGPS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -426,8 +433,9 @@
 			baseConfigurationReference = 530AE55EA3737AE74C318A2D /* Pods-MapRecorderGPS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MapRecorderGPS/MapRecorderGPS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = RHJ3A2L6K5;
 				INFOPLIST_FILE = MapRecorderGPS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -435,7 +443,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3;
+				MARKETING_VERSION = 2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.wolfmobileapps.MapRecorderGPS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
